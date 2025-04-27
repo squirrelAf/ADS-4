@@ -32,12 +32,27 @@ int countPairs2(int *arr, int len, int value) {
     }
     return cnt;
 }
+int Poisk(int* arr, int low, int high, int target) {
+    while (low <= high) {
+        int mid = low + (high - low) / 2;
+        if (arr[mid] == target) {
+            return mid;
+        }
+        else if (arr[mid] < target) {
+            low = mid + 1;
+        }
+        else {
+            high = mid - 1;
+        }
+    }
+    return -1;
+}
 int countPairs3(int *arr, int len, int value) {
     int count = 0;
     for (int i = 0; i < len; ++i) {
         int complement = value - arr[i];
         if (complement >= arr[i]) {
-            if (B_search(arr, i + 1, len - 1, complement) != -1) {
+            if (Poisk(arr, i + 1, len - 1, complement) != -1) {
                 ++count;
             }
         }
