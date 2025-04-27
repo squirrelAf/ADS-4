@@ -48,12 +48,12 @@ int Poisk(int* arr, int low, int high, int target) {
     return -1;
 }
 int countPairs3(int *arr, int len, int value) {
-    int count = 0;
+    int cnt = 0;
     for (int i = 0; i < len; ++i) {
         int complement = value - arr[i];
         if (complement >= arr[i]) {
             if (Poisk(arr, i + 1, len - 1, complement) != -1) {
-                ++count;
+                ++cnt;
             }
         }
     }
