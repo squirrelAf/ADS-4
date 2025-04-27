@@ -1,61 +1,67 @@
 // Copyright 2021 NNTU-CS
 int countPairs1(int *arr, int len, int value) {
-  int cnt = 0;
-    for (int i = 0; i < len; ++i) {
-        for (int j = i + 1; j < len; ++j) {
-            if (arr[i] + arr[j] == value) {
-                ++cnt;
-            }
-        }
+ int count = 0;
+  for (int a = 0; a < len; a++) {
+    for (int b = a + 1; b < len; b++) {
+      if (arr[a] + arr[b] == value) {
+        ++count;
+      } else if (arr[a] + arr[b] > value) {
+        break;
+      }
     }
-    return cnt;
+  }
+  return count;
 }
 int countPairs2(int *arr, int len, int value) {
-    int cnt = 0;
-    int lt = 0, rt = len - 1;
-
-    while (lt < rt) {
-        int sum = arr[lt] + arr[rt];
-        if (sum == value) {
-            ++cnt;
-            while (lt < rt && arr[lt] == arr[lt + 1]) ++lt;
-            while (lt < rt && arr[rt] == arr[rt - 1]) --rt;
-            ++lt;
-            --rt;
-        }
-        else if (sum < value) {
-            ++lt;
-        }
-        else {
-            --rt;
-        }
+   int left = 0;
+  int right = len - 1;
+  int cnt = 0;
+  while (left < right) {
+    int curSum = arr[left] + arr[right];
+    if (curSum == value) {
+      int l = left;
+      int r = right;
+      while (l < r && arr[l] + arr[r] == value) {
+        ++cnt;
+        ++l;
+      }
+      --right;
+    } else if (curSum < value) {
+      ++left;
+    } else {
+      --right;
     }
-    return cnt;
-}
-int Poisk(int* arr, int low, int high, int target) {
-    while (low <= high) {
-        int mid = low + (high - low) / 2;
-        if (arr[mid] == target) {
-            return mid;
-        }
-        else if (arr[mid] < target) {
-            low = mid + 1;
-        }
-        else {
-            high = mid - 1;
-        }
-    }
-    return -1;
+  }
+  return c nt;
 }
 int countPairs3(int *arr, int len, int value) {
-    int cnt = 0;
-    for (int i = 0; i < len; ++i) {
-        int complement = value - arr[i];
-        if (complement >= arr[i]) {
-            if (Poisk(arr, i + 1, len - 1, complement) != -1) {
-                ++cnt;
-            }
-        }
+  int count = 0;
+  for (int i = 0; i < len - 1; ++i) {
+    int pos = value - arr[i];
+    int left = i + 1, right = len - 1;
+    while (left <= right) {
+      int mi = (left + right) / 2;
+      if (arr[mi] < target) {
+        left = mi + 1;
+      } else {
+        right = mi - 1;
+      }
     }
-    return cnt;
+    int low = left;
+    left = i + 1;
+    right = len - 1;
+    while (left <= right) {
+      int mi = (left + right) / 2;
+      if (arr[mi] <= target) {
+        left = mi + 1;
+      } else {
+        right = mi - 1;
+      }
+    }
+    int high = right;
+    if (low <= high) {
+      count += (high - low + 1);
+    }
+  }
+  return count;
 }
