@@ -1,65 +1,81 @@
 // Copyright 2021 NNTU-CS
-
+#include <cstdint>
+#include <algorithm>
 int countPairs1(int *arr, int len, int value) {
-  int count = 0;
-  for (int i = 0; i < len; i++) {
-    for (int j = i + 1; j < len; j++) {
-      if (arr[i] + arr[j] == value) {
-        count++;
-      }
+    int count = 0;
+    for (int a = 0; a < len; a++) {
+        for (int b = a + 1; b < len; b++) {
+            if (arr[a] + arr[b] == value) {
+                count++;
+            }
+        }
     }
-  }
-  return count;
+    return count;
 }
 
 int countPairs2(int *arr, int len, int value) {
-  int count = 0;
-  int end = len - 1;
-  while (end > 0) {
-    if (arr[end] > value) {
-      end--;
-    } else {
-      break;
-    }
-  }
+  int k = 0;
   for (int i = 0; i < len; i++) {
-    for (int j = end; j > i; j--) {
-      if (arr[i] + arr[j] == value)
-        count++;
+    int lEl = i + 1;
+    int rEl = len - 1;
+    while (lEl <= rEl) {
+      int centre = lEl + (rEl - lEl) / 2;
+      if (arr[i] + arr[centre] == value) {
+        k++;
+        int l = centre - 1;
+        while (l >= lEl && arr[i] + arr[l] == value) {
+          k++;
+          l--;
+        }
+        int r = centre + 1;
+        while (r <= rEl && arr[i] + arr[r] == value) {
+          k++;
+          r++;
+        }
+        break;
+      } else if (arr[i] + arr[centre] < value) {
+        lEl = centre + 1;
+      } else {
+        rEl = centre - 1;
+      }
     }
   }
-  return count;
+  return k;
 }
 
+
 int countPairs3(int *arr, int len, int value) {
-  int count = 0;
-  for (int i = 0; i < len; ++i) {
-    int targ = value - arr[i];
-    int low = i + 1;
-    int high = len - 1;
-    while (low <= high) {
-      int mid = low + (high - low) / 2;
-      if (arr[mid] >= targ) {
-        high = mid - 1;
+  int k = 0;
+  int lEl = 0;
+  int rEl = len - 1;
+  while (lEl < rEl) {
+    int summa = arr[lEl] + arr[rEl];
+    if (summa == value) {
+      if (arr[lEl] != arr[rEl]) {
+        int lEl_val = arr[lEl];
+        int rEl_val = arr[rEl];
+        int lEl_k = 1;
+        int rEl_k = 1;
+        while (lEl + 1 < rEl && arr[lEl + 1] == lEl_val) {
+          lEl++;
+          lEl_k++;
+        }
+        while (rEl - 1 > lEl && arr[rEl - 1] == rEl_val) {
+          rEl--;
+          rEl_k++;
+        }
+        k += lEl_k * rEl_k;
+        lEl++;
+        rEl--;
       } else {
-        low = mid + 1;
+        k += (rEl - lEl + 1) * (rEl - lEl) / 2;
+        break;
       }
-    }
-    int first = low;
-    low = i + 1;
-    high = len - 1;
-    while (low <= high) {
-      int mid = low + (high - low) / 2;
-      if (arr[mid] <= targ) {
-        low = mid + 1;
-      } else {
-        high = mid - 1;
-      }
-    }
-    int last = high;
-    if (first <= last) {
-      count += last - first + 1;
+    } else if (summa < value) {
+      lEl++;
+    } else {
+      rEl--;
     }
   }
-  return count;
+  return k;
 }
